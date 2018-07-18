@@ -1,5 +1,6 @@
 import Config from '../../../config'
 import Axios from 'axios'
+import BlogDB from '../db'
 // const userPath = window.require("electron").remote.app.getPath("userData");
 // console.log(userPath);
 const API_URL = Config.API_URL
@@ -70,35 +71,50 @@ const actions = {
     },
     async getPost({ dispatch }, id) {
         dispatch('setLoading', true)
-        let { data } = await Axios.get(`blog/post/${id}`)
-        dispatch('setLoading', false)
-        if (data.errno) {
-            dispatch('setMessage', {
-                type: 'error',
-                message: data.errmsg || '文章获取失败'
-            })
-            return {}
+        let post = {}
+        if (navigator.onLine) {
+            let { data } = await Axios.get(`blog/post/${id}`)
+            if (data.errno) {
+                dispatch('setMessage', {
+                    type: 'error',
+                    message: data.errmsg || '文章获取失败'
+                })
+                return {}
+            }
+            post = data.data
         } else {
-            return data.data
+            post = await BlogDB.findOne(id)
         }
+        dispatch('setLoading', false)
+        return post
     },
     setPostListEmpty({ commit }) {
         commit('SET_POST_PAGE', [])
     },
     async getListPost({ commit, dispatch }, query) {
         dispatch('setLoading', true)
-        let { data } = await Axios.get('blog/post', { params: query })
-        if (data.errno) {
-            dispatch('setMessage', {
-                type: 'error',
-                message: data.errmsg || '文章列表获取失败'
-            })
+        let page = { data: [] }
+        let queryAll = !query || !Object.keys(query).length
+        if (navigator.onLine) {
+            let { data } = await Axios.get('blog/post', { params: query })
+            if (data.errno) {
+                dispatch('setMessage', {
+                    type: 'error',
+                    message: data.errmsg || '文章列表获取失败'
+                })
+            }
+            page = data.data || []
+            if (queryAll) {
+                // 同步数据
+                await BlogDB.addList(page.data)
+            }
+        } else {
+            page.data = await BlogDB.find(query)
         }
-
-        if (!query || !Object.keys(query).length) {
-            commit('SET_POST_FULL', data.data)
+        if (queryAll) {
+            commit('SET_POST_FULL', page)
         }
-        commit('SET_POST_PAGE', data.data)
+        commit('SET_POST_PAGE', page)
         dispatch('setLoading', false)
     },
     async createPost({ dispatch }, post) {
