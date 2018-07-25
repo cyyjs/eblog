@@ -1,21 +1,27 @@
 import Config from '../../../config'
 import Axios from 'axios'
 import BlogDB from '../db'
-// const userPath = window.require("electron").remote.app.getPath("userData");
-// console.log(userPath);
+import Util from '../../util'
 const API_URL = Config.API_URL
 Axios.defaults.baseURL = API_URL
-// Axios.defaults.headers.common["Authorization"] = AUTH_TOKEN;
-// import UploadAPI from "../../../electron/lib/upload";
-// console.log(UploadAPI);
-// import { PostDB } from "../db";
-// import Io from "../../../lib/io";
-// import {def as defaultContent} from '../../../data/static'
 
-// const moment = require("moment");
+const getPromistList = (online, local) => {
+    let list = []
+    online.forEach(l => {
+        if (!l._id || l._id.startsWith('local_')) {
+            delete l._id
+            list.push(Axios.post('blog/post', l))
+        } else {
+            list.push(Axios.put(`blog/post/${l._id}`, l))
+        }
+    })
 
-// const Reg = /!\[[^[]*?\]\(\s*([^)|^\s]+)(?=\s*\))/g;
-// const defaultContent = fs.readFileSync(path.join(__static, 'default.md')).toString()
+    local.forEach(l => {
+        list.push(BlogDB.upset(l))
+    })
+
+    return Promise.all(list)
+}
 const state = {
     fullList: [],
     import_post: {},
@@ -91,6 +97,23 @@ const actions = {
     setPostListEmpty({ commit }) {
         commit('SET_POST_PAGE', [])
     },
+    // 数据同步
+    async synchrodata({ dispatch }) {
+        if (navigator.onLine) {
+            let { data } = await Axios.get('blog/post')
+            if (data.errno) {
+                dispatch('setMessage', {
+                    type: 'error',
+                    message: data.errmsg || '文章列表获取失败'
+                })
+            } else {
+                let dataOnline = (data.data && data.data.data) || []
+                let dataLocal = await BlogDB.find()
+                let { online, local } = Util.diffPost(dataOnline, dataLocal)
+                await getPromistList(online, local)
+            }
+        }
+    },
     async getListPost({ commit, dispatch }, query) {
         dispatch('setLoading', true)
         let page = { data: [] }
@@ -104,10 +127,10 @@ const actions = {
                 })
             }
             page = data.data || []
-            if (queryAll) {
-                // 同步数据
-                await BlogDB.addList(page.data)
-            }
+            // if (queryAll) {
+            //     // 同步数据
+            //     await BlogDB.addList(page.data)
+            // }
         } else {
             page.data = await BlogDB.find(query)
         }
@@ -119,15 +142,27 @@ const actions = {
     },
     async createPost({ dispatch }, post) {
         dispatch('setLoading', true)
-        let { data } = await Axios.post('blog/post', post)
         let id = ''
-        if (!data.errno) {
+        let msg = ''
+        if (navigator.onLine) {
+            let { data } = await Axios.post('blog/post', post)
+            if (!data.errno) {
+                id = data.data && data.data.id
+                post = data.data
+            } else {
+                msg = data.errmsg || '保存失败'
+            }
+        } else {
+            post._id = 'local_' + Date.now()
+            id = post._id
+        }
+        await BlogDB.add(post)
+        if (!msg) {
             dispatch('setMessage', { type: 'success', message: '保存成功' })
-            id = data.data
         } else {
             dispatch('setMessage', {
                 type: 'error',
-                message: data.errmsg || '保存失败'
+                message: msg
             })
         }
         dispatch('getListPost')
@@ -135,130 +170,53 @@ const actions = {
     },
     async updatePost({ dispatch }, post) {
         dispatch('setLoading', true)
-        let id = post._id
-        delete post._id
-        let { data } = await Axios.put(`blog/post/${id}`, post)
         let str = '保存'
         if (post.status === 2) {
             str = '删除'
         }
-        if (!data.errno) {
+        let msg = ''
+        if (navigator.onLine) {
+            let id = post._id
+            delete post._id
+            let { data } = await Axios.put(`blog/post/${id}`, post)
+            if (data.errno) {
+                msg = data.errmsg || str + '失败'
+            }
+        } else {
+            await BlogDB.update(post)
+        }
+        if (!msg) {
             dispatch('setMessage', { type: 'success', message: str + '成功' })
         } else {
             dispatch('setMessage', {
                 type: 'error',
-                message: data.errmsg || str + '失败'
+                message: msg
             })
         }
         dispatch('setLoading', false)
-        return data
+        return msg
     },
     async deletePost({ dispatch }, id) {
         dispatch('setLoading', true)
-        let { data } = await Axios.delete(`blog/post/${id}`)
-        if (!data.errmsg) {
-            dispatch('setMessage', { type: 'success', message: '删除成功' })
-        } else {
+        let msg = ''
+        if (navigator.onLine) {
+            let { data } = await Axios.delete(`blog/post/${id}`)
+            if (data.errmsg) {
+                msg = data.errmsg || '删除失败'
+            }
+        }
+        await BlogDB.remove(id)
+        if (!msg) {
             dispatch('setMessage', {
-                type: 'error',
-                message: data.errmsg || '删除失败'
+                type: 'success',
+                message: '删除成功'
             })
+        } else {
+            dispatch('setMessage', { type: 'error', message: msg })
         }
         dispatch('setLoading', false)
         return
     }
-    //   createNote({ commit }) {
-    //     commit("SET_POST", {});
-    //   },
-    //   // 获取文章列表
-    //   async getNoteList({ commit }, query = {}) {
-    //     let data = await PostDB.findSort(query, { updated: -1 });
-    //     commit("SET_NOTE_LIST", data);
-    //     return data;
-    //   },
-
-    //   // 按月份获取文章列表
-    //   async getNoteGroupMonth({ commit }, query = {}) {
-    //     let data = await PostDB.findSort(query, { updated: -1 });
-    //     let map = {};
-    //     data.forEach(item => {
-    //       let m = moment(item.updated).format("YYYY-MM");
-    //       map[m] = map[m] || [];
-    //       map[m].push(item);
-    //     });
-    //     return map;
-    //   },
-
-    //   // 保存文章
-    //   async saveNote({ commit, dispatch }, post) {
-    //     let user = dispatch("getUser");
-    //     post.userID = user._id;
-    //     post.date = new Date();
-    //     post.updated = new Date();
-    //     let img = Reg.exec(post.content);
-    //     if (img && img.length > 0) {
-    //       img = img[1];
-    //       post.thumbnail = img;
-    //     }
-    //     let r = await PostDB.insert(post);
-    //     return r;
-    //   },
-
-    //   // 获取某个文章
-    //   async getNote({ commit }, _id) {
-    //     let post = await PostDB.findOne({ _id });
-    //     commit("SET_POST", post);
-    //     return post;
-    //   },
-
-    //   // 保存或修改文章
-    //   async saveOrUpdateNote({ commit, dispatch }, post) {
-    //     post.updated = new Date();
-    //     let img = Reg.exec(post.content);
-    //     if (img && img.length > 0) {
-    //       img = img[1];
-    //       post.thumbnail = img;
-    //     }
-    //     let r;
-    //     if (post._id) {
-    //       r = await PostDB.update({ _id: post._id }, { $set: post });
-    //       dispatch("getNote", post._id);
-    //     } else {
-    //       delete post._id;
-    //       let user = await dispatch("getUser");
-    //       post.userID = user._id;
-    //       post.date = new Date();
-    //       post.publish = false;
-    //       r = await PostDB.insert(post);
-    //       dispatch("getNote", r._id);
-    //     }
-    //     return r;
-    //   },
-
-    //   // 删除文章
-    //   async deleteNote({ commit, dispatch }, _id) {
-    //     let r = await PostDB.remove({ _id });
-    //     dispatch("getNoteList");
-    //     return r;
-    //   },
-
-    //   // 文件导出
-    //   async exportFile({ commit, dispatch }, data) {
-    //     let user = await dispatch("getUser");
-    //     if (data.type === "hexo") {
-    //       commit("SET_PUBLISHING", true);
-    //     }
-    //     await Io.export(data, user);
-    //     commit("SET_PUBLISHING", false);
-    //     dispatch("getNote", data._id);
-    //   },
-
-    //   // 取消发布
-    //   async dePublish({ dispatch }, _id) {
-    //     let user = await dispatch("getUser");
-    //     await Io.dePublish(_id, user);
-    //     dispatch("getNote", _id);
-    //   }
 }
 const getters = {
     typeList({ fullList }) {

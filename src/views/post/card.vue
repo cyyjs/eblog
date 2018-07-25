@@ -129,7 +129,7 @@ export default {
                 async isBack => {
                     if (isBack) {
                         await this.updatePost({
-                            _id: this.item._id,
+                            ...this.item,
                             status: 0
                         })
                         this.$emit('reload')
@@ -150,7 +150,7 @@ export default {
                             await this.deletePost(this.item._id)
                         } else {
                             await this.updatePost({
-                                _id: this.item._id,
+                                ...this.item,
                                 status: 2
                             })
                         }
@@ -168,7 +168,7 @@ export default {
     height: 230px;
     background-color: #fff;
     position: relative;
-    margin: 20px;
+    margin: 30px 0 30px 30px;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }

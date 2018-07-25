@@ -21,15 +21,20 @@ export default {
         Setting
     },
     methods: {
-        ...mapActions(['getListPost'])
+        ...mapActions(['getListPost', 'synchrodata'])
     },
     mounted() {
         this.getListPost()
+        this.synchrodata()
+        window.addEventListener('online', () => {
+            this.synchrodata()
+        })
     }
-};</script>
+}
+</script>
 
 <style lang="scss">
 .content {
-    margin-left: 69px;
+    margin-left: 70px;
 }
 </style>

@@ -51,9 +51,9 @@ export default {
     async add(post) {
         let postReq = await getStore(PostStore)
         return new Promise((resolve, reject) => {
-            postReq.add(post)
-            postReq.onsuccess = resolve
-            postReq.onerror = reject
+            let req = postReq.add(post)
+            req.onsuccess = resolve
+            req.onerror = reject
         })
     },
     async addList(list) {
@@ -96,10 +96,10 @@ export default {
         })
     },
     async upset(data) {
-        let postReq = await getStore(PostStore)
         if (data._id) {
             let p = await this.findOne(data._id)
             if (p && p.updated !== data.updated) {
+                let postReq = await getStore(PostStore)
                 await this.remove(data._id)
                 return new Promise((resolve, reject) => {
                     let req = postReq.put(data)

@@ -47,6 +47,7 @@
                     </mu-select>
                 </div>
                 <mu-checkbox v-model="draft" label="发布"></mu-checkbox>
+                <mu-checkbox style="margin-left:20px" v-model="source" label="原创声明"></mu-checkbox>
             </mu-form>
             <div class="footer-btn">
                 <mu-button color="primary" @click.native="save">保存</mu-button>
@@ -92,6 +93,7 @@ export default {
             inited: false,
             toolbars,
             draft: false,
+            source: false,
             post: {
                 banner: '',
                 title: '',
@@ -204,9 +206,12 @@ export default {
                 return false
             }
             post.status = this.draft ? 1 : 0
+            post.source = this.source
+            post.updated = new Date().toISOString()
             if (post._id) {
                 await this.updatePost(post)
             } else {
+                post.created = new Date().toISOString()
                 let id = await this.createPost(post)
                 this.post._id = id
             }
@@ -215,7 +220,6 @@ export default {
     },
     watch: {
         $route() {
-            console.log(this.$route)
             let r = this.save()
             if (r) {
                 this.reset()

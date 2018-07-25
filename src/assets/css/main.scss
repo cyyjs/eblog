@@ -1,6 +1,5 @@
 body {
-    font-family: 'SF Pro SC', 'SF Pro Text', 'SF Pro Icons', 'PingFang SC',
-        'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+    font-family: 'SF Pro SC', 'SF Pro Text', 'SF Pro Icons', 'PingFang SC', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
     background-color: #eee;
 }
 
@@ -27,7 +26,7 @@ body {
     .mu-item {
         padding: 0 10px;
     }
-    .mu-list > li {
+    .mu-list>li {
         margin: 5px 0;
     }
 }
@@ -43,12 +42,12 @@ body {
     & .v-show-content {
         padding-top: 75px;
     }
-    & > div {
+    &>div {
         width: 75%;
         height: 100vh;
     }
-    & > .title-input {
-        width: 70%;
+    &>.title-input {
+        width: 69%;
         background-color: #fff;
         font-size: 1.2rem;
         position: absolute;
@@ -56,7 +55,7 @@ body {
         z-index: 1501;
         top: 40px;
         padding: 25px 25px 0 25px;
-        & > div {
+        &>div {
             padding-bottom: 10px;
         }
     }
@@ -70,7 +69,7 @@ body {
     box-shadow: none;
 }
 
-.icon-badge > em {
+.icon-badge>em {
     background: rgba(0, 0, 0, 0.2);
     margin-left: 10px;
     margin-right: -5px;
@@ -99,7 +98,7 @@ body {
     width: 230px;
 }
 
-.top-head + div {
+.top-head+div {
     padding: 20px 40px;
     padding-top: 45px;
     height: 100vh;
