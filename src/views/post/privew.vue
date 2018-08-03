@@ -26,7 +26,6 @@
     </div>
 </template>
 <script>
-import { mavonEditor } from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import Util from '../../util'
 import { mapState } from 'vuex'
@@ -38,9 +37,6 @@ export default {
                 content: ''
             })
         }
-    },
-    components: {
-        mavonEditor
     },
     computed: {
         ...mapState({

@@ -121,3 +121,59 @@ body {
 .left {
     float: left;
 }
+
+code {
+    color: #476582;
+    padding: 0.25rem 0.5rem;
+    margin: 0;
+    font-size: 0.85em;
+    background-color: rgba(27, 31, 35, 0.05);
+    border-radius: 3px;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, Courier New, monospace;
+}
+
+.markdown-body pre,
+.markdown-body pre[class*='lang-'] {
+    padding: 10px;
+    font-family: Consolas, Monaco, Andale Mono, Ubuntu Mono, monospace;
+    position: relative;
+    line-height: 1.4;
+    margin: 0.85rem 0;
+    background-color: #282c34;
+    border-radius: 6px;
+    code {
+        overflow: auto;
+        display: block;
+        padding-top: 0.5rem;
+        color: #fff;
+        background-color: transparent;
+        border-radius: 0;
+    }
+}
+
+pre[class*='lang-']:before {
+    content: ' ';
+    position: absolute;
+    z-index: 3;
+    top: 0.8em;
+    right: 1em;
+    font-size: 0.75rem;
+    color: hsla(0, 0%, 100%, 0.4);
+}
+
+$lang_list: ( javascript, js, typescript, ts, markup, vue, markdown, md, ruby, rb, python, py, bash, shell, sh, css, html, sass, scss, less, stylus, go, java, c, yaml, json);
+$lang_map: ( javascript: js, typescript: ts, markup: html, vue: html, markdown: md, ruby: rb, python: py, bash: sh);
+@function getlang($map, $lang) {
+    @if not map-has-key($map, $lang) {
+        @return ''+$lang;
+    }
+    @else {
+        @return ''+map-get($map, $lang);
+    }
+}
+
+@each $lang in $lang_list {
+    pre[class~='lang-#{$lang}']:before {
+        content: getlang($lang_map, $lang);
+    }
+}

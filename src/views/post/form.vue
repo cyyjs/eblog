@@ -58,7 +58,6 @@
     </div>
 </template>
 <script>
-import { mavonEditor } from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import Confirm from '../../components/Confirm'
 import { mapActions, mapState, mapGetters } from 'vuex'
@@ -84,7 +83,6 @@ const toolbars = {
 let tiem = null
 export default {
     components: {
-        mavonEditor,
         Confirm
     },
     data() {
@@ -234,6 +232,7 @@ export default {
             if (post._id) {
                 this.post = Object.assign(post)
                 this.draft = this.post.status === 1
+                this.source = this.post.source
             }
         }
         if (isImport) {

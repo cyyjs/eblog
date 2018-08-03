@@ -43,21 +43,19 @@ const template = [
             {
                 label: '主页',
                 click() {
-                    shell.openExternal('http://ceditor.alibt.top')
+                    shell.openExternal('http://alibt.top')
                 }
             },
             {
                 label: '关于作者',
                 click() {
-                    shell.openExternal('https://github.com/cyy0418')
+                    shell.openExternal('https://github.com/cyyjs')
                 }
             },
             {
                 label: '反馈建议',
                 click() {
-                    shell.openExternal(
-                        'https://github.com/cyy0418/ceditor/issues'
-                    )
+                    shell.openExternal('https://github.com/cyyjs/eblog/issues')
                 }
             }
         ]

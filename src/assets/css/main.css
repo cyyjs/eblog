@@ -125,3 +125,148 @@ body {
 .left {
   float: left;
 }
+
+code {
+  color: #476582;
+  padding: 0.25rem 0.5rem;
+  margin: 0;
+  font-size: 0.85em;
+  background-color: rgba(27, 31, 35, 0.05);
+  border-radius: 3px;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, Courier New, monospace;
+}
+
+.markdown-body pre,
+.markdown-body pre[class*='lang-'] {
+  padding: 10px;
+  font-family: Consolas, Monaco, Andale Mono, Ubuntu Mono, monospace;
+  position: relative;
+  line-height: 1.4;
+  margin: 0.85rem 0;
+  background-color: #282c34;
+  border-radius: 6px;
+}
+
+.markdown-body pre code,
+.markdown-body pre[class*='lang-'] code {
+  overflow: auto;
+  display: block;
+  padding-top: 0.5rem;
+  color: #fff;
+  background-color: transparent;
+  border-radius: 0;
+}
+
+pre[class*='lang-']:before {
+  content: ' ';
+  position: absolute;
+  z-index: 3;
+  top: 0.8em;
+  right: 1em;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+pre[class~='lang-javascript']:before {
+  content: "js";
+}
+
+pre[class~='lang-js']:before {
+  content: "js";
+}
+
+pre[class~='lang-typescript']:before {
+  content: "ts";
+}
+
+pre[class~='lang-ts']:before {
+  content: "ts";
+}
+
+pre[class~='lang-markup']:before {
+  content: "html";
+}
+
+pre[class~='lang-vue']:before {
+  content: "html";
+}
+
+pre[class~='lang-markdown']:before {
+  content: "md";
+}
+
+pre[class~='lang-md']:before {
+  content: "md";
+}
+
+pre[class~='lang-ruby']:before {
+  content: "rb";
+}
+
+pre[class~='lang-rb']:before {
+  content: "rb";
+}
+
+pre[class~='lang-python']:before {
+  content: "py";
+}
+
+pre[class~='lang-py']:before {
+  content: "py";
+}
+
+pre[class~='lang-bash']:before {
+  content: "sh";
+}
+
+pre[class~='lang-shell']:before {
+  content: "shell";
+}
+
+pre[class~='lang-sh']:before {
+  content: "sh";
+}
+
+pre[class~='lang-css']:before {
+  content: "css";
+}
+
+pre[class~='lang-html']:before {
+  content: "html";
+}
+
+pre[class~='lang-sass']:before {
+  content: "sass";
+}
+
+pre[class~='lang-scss']:before {
+  content: "scss";
+}
+
+pre[class~='lang-less']:before {
+  content: "less";
+}
+
+pre[class~='lang-stylus']:before {
+  content: "stylus";
+}
+
+pre[class~='lang-go']:before {
+  content: "go";
+}
+
+pre[class~='lang-java']:before {
+  content: "java";
+}
+
+pre[class~='lang-c']:before {
+  content: "c";
+}
+
+pre[class~='lang-yaml']:before {
+  content: "yaml";
+}
+
+pre[class~='lang-json']:before {
+  content: "json";
+}
