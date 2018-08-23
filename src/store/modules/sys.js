@@ -48,6 +48,7 @@ const actions = {
     setLoading({ commit }, data) {
         commit('SET_LOADING', data)
         if (data) {
+            clearTimeout(time)
             time = setTimeout(() => {
                 commit('SET_LOADING', false)
                 commit('SET_MESSAGE', {
