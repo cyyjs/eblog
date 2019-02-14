@@ -1,8 +1,16 @@
 <template>
     <div id="editor">
         <h1 class="title-input" v-if="isPreview">{{post.title}}</h1>
-        <mu-text-field class="title-input" v-else v-model="post.title" placeholder="请输入标题" :max-length="64"></mu-text-field>
-        <mavon-editor ref="editor" v-model="post.content" 
+        <mu-text-field
+            class="title-input"
+            v-else
+            v-model="post.title"
+            placeholder="请输入标题"
+            :max-length="64"
+        ></mu-text-field>
+        <mavon-editor
+            ref="editor"
+            v-model="post.content"
             :subfield="false"
             :codeStyle="setting.codeStyle"
             :toolbars="toolbars"
@@ -15,7 +23,10 @@
         <div class="editor-right">
             <h3>文章设置</h3>
             <div>
-                <mu-ripple class="upload-btn mu-primary-text-color mu-primary-boder" @click.native="uploadFile">
+                <mu-ripple
+                    class="upload-btn mu-primary-text-color mu-primary-boder"
+                    @click.native="uploadFile"
+                >
                     <template v-if="post.banner">
                         <img class="banner" :src="post.banner" alt="封面">
                     </template>
@@ -23,27 +34,49 @@
                         <svg class="icon" aria-hidden="true">
                             <use xlink:href="#icon-jiahao"></use>
                         </svg>
-                        <div>
-                            上传封面
-                        </div>
+                        <div>上传封面</div>
                     </template>
-                    <input v-show="false" type="file" name="file" ref="file" accept="image/*" @change="selectFile"/>
+                    <input
+                        v-show="false"
+                        type="file"
+                        name="file"
+                        ref="file"
+                        accept="image/*"
+                        @change="selectFile"
+                    >
                 </mu-ripple>
             </div>
             <mu-form :model="post" class="form" label-position="top" label-width="100">
                 <div>
                     <mu-form-item prop="description" prepend="摘要">
-                        <mu-text-field placeholder="请输入文章摘要" multi-line :rows="3" :rows-max="6" :max-length="100" v-model="post.description"></mu-text-field>
+                        <mu-text-field
+                            placeholder="请输入文章摘要"
+                            multi-line
+                            :rows="3"
+                            :rows-max="6"
+                            :max-length="100"
+                            v-model="post.description"
+                        ></mu-text-field>
                     </mu-form-item>
                 </div>
                 <div>
                     <mu-select label="分类" v-model="post.category" tags>
-                        <mu-option v-for="(category,index) in categorys" :key="index" :label="category" :value="category"></mu-option>
+                        <mu-option
+                            v-for="(category,index) in categorys"
+                            :key="index"
+                            :label="category"
+                            :value="category"
+                        ></mu-option>
                     </mu-select>
                 </div>
                 <div>
                     <mu-select label="标签" v-model="post.tags" chips multiple tags>
-                        <mu-option v-for="(tag,index) in tags" :key="index" :label="tag" :value="tag"></mu-option>
+                        <mu-option
+                            v-for="(tag,index) in tags"
+                            :key="index"
+                            :label="tag"
+                            :value="tag"
+                        ></mu-option>
                     </mu-select>
                 </div>
                 <mu-checkbox v-model="draft" label="发布"></mu-checkbox>
@@ -51,10 +84,10 @@
             </mu-form>
             <div class="footer-btn">
                 <mu-button color="primary" @click.native="save">保存</mu-button>
-                <mu-button  @click.native="$router.push('/')">关闭</mu-button>
+                <mu-button @click.native="$router.push('/')">关闭</mu-button>
             </div>
         </div>
-        <confirm ref='confirm'></confirm>
+        <confirm ref="confirm"></confirm>
     </div>
 </template>
 <script>

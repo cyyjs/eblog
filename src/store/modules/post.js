@@ -1,7 +1,7 @@
-import Config from '../../../config'
-import Axios from 'axios'
-import BlogDB from '../db'
-import Util from '../../util'
+import Axios from 'axios';
+import Config from '../../../config';
+import Util from '../../util';
+import BlogDB from '../db';
 const API_URL = Config.API_URL
 Axios.defaults.baseURL = API_URL
 
@@ -147,7 +147,7 @@ const actions = {
         if (navigator.onLine) {
             let { data } = await Axios.post('blog/post', post)
             if (!data.errno) {
-                id = data.data && data.data.id
+                id = data.data && data.data._id
                 post = data.data
             } else {
                 msg = data.errmsg || '保存失败'

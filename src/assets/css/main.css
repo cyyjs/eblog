@@ -31,6 +31,10 @@ body {
   margin: 5px 0;
 }
 
+#editor .mu-input-help {
+  bottom: 6px;
+}
+
 #editor .v-note-wrapper {
   z-index: inherit;
 }
@@ -50,8 +54,9 @@ body {
 }
 
 #editor > .title-input {
-  width: 69%;
-  background-color: #fff;
+  width: 69.5%;
+  background-color: #fbfbfb;
+  border-bottom: 1px solid #eee;
   font-size: 1.2rem;
   position: absolute;
   height: initial;
@@ -62,6 +67,10 @@ body {
 
 #editor > .title-input > div {
   padding-bottom: 10px;
+}
+
+#editor > .title-input .mu-text-field-input {
+  padding-right: 50px;
 }
 
 #editor .add-image-link-wrapper .add-image-link {
