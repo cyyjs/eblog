@@ -18,17 +18,16 @@ function createWindow() {
         useContentSize: true,
         width: 1110,
         titleBarStyle: 'hidden',
-        // backgroundColor: "#2e2c29",
+        backgroundColor: "#fff",
         minWidth: 1110,
-        minHeight: 720
-        // show: false
+        minHeight: 720,
+        show: false
         // transparent: true
     })
 
     // and load the index.html of the app.
 
     mainWindow.loadURL(winurl)
-
     mainWindow.once('ready-to-show', () => {
         mainWindow.show()
         Menu.showEditor()

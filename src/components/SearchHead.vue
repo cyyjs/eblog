@@ -3,33 +3,51 @@
         <div class="title">
             <div class="left">
                 <mu-form :inline="true" :model="postQuery" style="padding-top:5px;">
-                    <mu-select label="" v-model="postQuery.category" class="type-select no-border" @change="change(1)">
+                    <mu-select
+                        label
+                        v-model="postQuery.category"
+                        class="type-select no-border"
+                        @change="change(1)"
+                    >
                         <mu-option v-for="t in types" :key="t" :label="t" :value="t"></mu-option>
                     </mu-select>
-                    <mu-select label="" v-model="postQuery.tag" class="type-select no-border" style="margin:0 10px;margin-right:0;" @change="change()">
+                    <mu-select
+                        label
+                        v-model="postQuery.tag"
+                        class="type-select no-border"
+                        style="margin:0 10px;margin-right:0;"
+                        @change="change()"
+                    >
                         <mu-option v-for="t in tags" :key="t" :label="t" :value="t"></mu-option>
                     </mu-select>
                     <mu-button icon small color="primary" class="status-icon" @click="changeStatus">
-                       <svg class="icon"  aria-hidden="true">
-                            <use :xlink:href="statusIcon"></use>
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="statusIcon"></use>
                         </svg>
                     </mu-button>
-                    <mu-text-field placeholder="文章搜索..." v-model="postQuery.q" @input="change()" class="search no-border nodrag">
+                    <mu-text-field
+                        placeholder="文章搜索..."
+                        v-model="postQuery.q"
+                        @input="change()"
+                        class="search no-border nodrag"
+                    >
                         <svg class="search-icon icon" slot="prepend" aria-hidden="true">
                             <use xlink:href="#icon-search"></use>
                         </svg>
                     </mu-text-field>
                 </mu-form>
             </div>
-            <mu-button flat small ref="viewButton" class="view-button" @click="open = !open">
-                <svg v-if="viewType==1" class="view-icon icon"  aria-hidden="true">
-                    <use xlink:href="#icon-plus-gridview"></use>
-                </svg>
-                <svg v-else class="view-icon icon"  aria-hidden="true">
-                    <use xlink:href="#icon-yduipaibanleixingliebiao"></use>
-                </svg>
-            </mu-button>
-            <mu-popover cover :open.sync="open" :trigger="trigger">
+            <mu-tooltip :content="viewType == 1 ? '卡片视图':'摘要视图'">
+                <mu-button flat small ref="viewButton" class="view-button" @click="changeView()">
+                    <svg v-if="viewType==1" class="view-icon icon" aria-hidden="true">
+                        <use xlink:href="#icon-plus-gridview"></use>
+                    </svg>
+                    <svg v-else class="view-icon icon" aria-hidden="true">
+                        <use xlink:href="#icon-yduipaibanleixingliebiao"></use>
+                    </svg>
+                </mu-button>
+            </mu-tooltip>
+            <!-- <mu-popover cover :open.sync="open" :trigger="trigger">
                 <mu-list>
                     <mu-list-item button @click="changeView(1)">
                         <mu-list-item-action class="item-action">
@@ -48,17 +66,26 @@
                         <mu-list-item-title>摘要视图</mu-list-item-title>
                     </mu-list-item>
                 </mu-list>
-            </mu-popover>
-            <mu-button v-show="showOptionBtn" flat small ref="optionButton" class="option-button" @click="open2 = !open2">
-                <svg class="view-icon icon"  aria-hidden="true">
-                    <use xlink:href="#icon-youcecaidan"></use>
-                </svg>
-            </mu-button>
+            </mu-popover>-->
+            <mu-tooltip content="操作">
+                <mu-button
+                    v-show="showOptionBtn"
+                    flat
+                    small
+                    ref="optionButton"
+                    class="option-button"
+                    @click="open2 = !open2"
+                >
+                    <svg class="view-icon icon" aria-hidden="true">
+                        <use xlink:href="#icon-youcecaidan"></use>
+                    </svg>
+                </mu-button>
+            </mu-tooltip>
             <mu-popover cover :open.sync="open2" :trigger="trigger2">
                 <mu-list>
                     <mu-list-item button @click="$emit('import')">
                         <mu-list-item-action class="item-action">
-                            <svg class="view-icon icon"  aria-hidden="true">
+                            <svg class="view-icon icon" aria-hidden="true">
                                 <use xlink:href="#icon-daoru"></use>
                             </svg>
                         </mu-list-item-action>
@@ -67,7 +94,7 @@
                     <mu-divider v-show="viewType==2"></mu-divider>
                     <mu-list-item button @click="$emit('export','md')" v-show="viewType==2">
                         <mu-list-item-action class="item-action">
-                            <svg class="view-icon icon"  aria-hidden="true">
+                            <svg class="view-icon icon" aria-hidden="true">
                                 <use xlink:href="#icon-md"></use>
                             </svg>
                         </mu-list-item-action>
@@ -75,7 +102,7 @@
                     </mu-list-item>
                     <mu-list-item button @click="$emit('export','html')" v-show="viewType==2">
                         <mu-list-item-action class="item-action">
-                            <svg class="view-icon icon"  aria-hidden="true">
+                            <svg class="view-icon icon" aria-hidden="true">
                                 <use xlink:href="#icon-HTML"></use>
                             </svg>
                         </mu-list-item-action>
@@ -83,7 +110,7 @@
                     </mu-list-item>
                     <mu-list-item button @click="$emit('export','pdf')" v-show="viewType==2">
                         <mu-list-item-action class="item-action">
-                            <svg class="view-icon icon"  aria-hidden="true">
+                            <svg class="view-icon icon" aria-hidden="true">
                                 <use xlink:href="#icon-pdf1"></use>
                             </svg>
                         </mu-list-item-action>
@@ -150,7 +177,8 @@ export default {
             }
             this.setPostQuery(this.postQuery)
         },
-        changeView(t) {
+        changeView() {
+            let t = this.viewType === 1 ? 2 : 1
             this.open = false
             this.setViewType(t)
         },
@@ -193,7 +221,7 @@ export default {
             float: left;
             line-height: 45px;
             &:after {
-                content: ' ';
+                content: " ";
                 clear: both;
             }
         }
