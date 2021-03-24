@@ -3,6 +3,7 @@ const Menu = require('./lib/menu')
 const { app, BrowserWindow } = require('electron')
 const path = require('path')
 const isDev = process.env.NODE_ENV === 'development'
+require('./router')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
@@ -21,8 +22,13 @@ function createWindow() {
         backgroundColor: "#fff",
         minWidth: 1110,
         minHeight: 720,
-        show: false
-        // transparent: true
+        show: false,
+        webPreferences: {
+          contextIsolation: false,
+          enableRemoteModule: false,
+          webSecurity: true,
+          nodeIntegration: true
+        }
     })
 
     // and load the index.html of the app.
@@ -32,13 +38,13 @@ function createWindow() {
         mainWindow.show()
         Menu.showEditor()
         if (isDev) {
-            let installExtension = require('electron-devtools-installer')
-            installExtension
-                .default(installExtension.VUEJS_DEVTOOLS)
-                .then((name) => console.log(`Added Extension:  ${name}`))
-                .catch(err => {
-                    console.log('无法安装 `vue-devtools`: \n', err)
-                })
+            // let installExtension = require('electron-devtools-installer')
+            // installExtension
+            //     .default(installExtension.VUEJS_DEVTOOLS)
+            //     .then((name) => console.log(`Added Extension:  ${name}`))
+            //     .catch(err => {
+            //         console.log('无法安装 `vue-devtools`: \n', err)
+            //     })
             // Open the DevTools.
             mainWindow.webContents.openDevTools()
         }

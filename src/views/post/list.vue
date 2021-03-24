@@ -23,6 +23,8 @@ import SearchHead from '../../components/SearchHead'
 import privew from './privew'
 import Card from './card'
 import { mapState, mapActions } from 'vuex'
+import { exportFile, importFile} from '../../api';
+
 let time = null
 export default {
     props: {
@@ -52,7 +54,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['getListPost', 'exportFile', 'importFile']),
+        ...mapActions(['getListPost', 'setMessage', 'importPost']),
         fetchList() {
             clearTimeout(time)
             time = setTimeout(() => {
@@ -75,17 +77,24 @@ export default {
         },
         async exportFileEvent(t) {
             this.open2 = false
-            await this.exportFile({
+            const { data } = await exportFile({
                 type: t,
                 title: this.privewPost.title,
                 mk: this.privewPost.content,
                 html: this.$refs.privew.getHtml()
             })
-            //   this.setViewType(t);
+            if (data.code === 1) {
+                this.setMessage({
+                    type: 'success',
+                    message: "文章导出成功"
+                })
+            }
         },
         async importFileEvent() {
             // 如果导入了文件
-            let impored = await this.importFile()
+            const { data } = await importFile()
+            const impored = data.data
+            this.importPost(impored)
             if (impored) {
                 this.$router.push({ path: '/post', query: { import: 1 } })
             }

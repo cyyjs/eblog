@@ -47,26 +47,6 @@
                     </svg>
                 </mu-button>
             </mu-tooltip>
-            <!-- <mu-popover cover :open.sync="open" :trigger="trigger">
-                <mu-list>
-                    <mu-list-item button @click="changeView(1)">
-                        <mu-list-item-action class="item-action">
-                            <svg class="view-icon icon"  aria-hidden="true">
-                                <use xlink:href="#icon-plus-gridview"></use>
-                            </svg>
-                        </mu-list-item-action>
-                        <mu-list-item-title>卡片视图</mu-list-item-title>
-                    </mu-list-item>
-                    <mu-list-item button @click="changeView(2)">
-                        <mu-list-item-action class="item-action">
-                            <svg class="view-icon icon"  aria-hidden="true">
-                                <use xlink:href="#icon-yduipaibanleixingliebiao"></use>
-                            </svg>
-                        </mu-list-item-action>
-                        <mu-list-item-title>摘要视图</mu-list-item-title>
-                    </mu-list-item>
-                </mu-list>
-            </mu-popover>-->
             <mu-tooltip content="操作">
                 <mu-button
                     v-show="showOptionBtn"
@@ -162,7 +142,7 @@ export default {
         },
         showOptionBtn() {
             let f = false
-            if (this.$route.path === '/' && this.$isElectron) {
+            if (this.$route.path === '/') {
                 f = true
             }
             return f

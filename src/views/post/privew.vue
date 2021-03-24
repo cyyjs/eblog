@@ -15,7 +15,7 @@
         </div>
         <mavon-editor 
             ref="editor"
-            v-model="post.content" 
+            v-model="content" 
             :subfield="false"
             defaultOpen="preview"
             :editable="false"
@@ -46,6 +46,12 @@ export default {
             return this.post.updated
                 ? Util.formatDateYYYYMMDD(this.post.updated)
                 : ''
+        },
+        content: {
+            get() {
+                return this.post.content
+            },
+            set() {}
         }
     },
     methods: {
