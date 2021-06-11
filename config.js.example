@@ -1,0 +1,11 @@
+/*
+ * @Author: cyy
+ * @Date: 2021-06-11 15:36:25
+ * @LastEditors: cyy
+ * @LastEditTime: 2021-06-11 16:32:29
+ * @Description: 
+ */
+
+module.exports = {
+  API_URL: ''
+}
