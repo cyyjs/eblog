@@ -31,7 +31,7 @@
     "babel-eslint": "^10.1.0",
     "babel-plugin-import": "^1.13.3",
     "chalk": "^4.1.0",
-    "electron": "^13.6.9",
+    "electron": "^18.3.7",
     "electron-builder": "^22.11.7",
     "eslint": "^7.22.0",
     "eslint-plugin-vue": "^7.8.0",
